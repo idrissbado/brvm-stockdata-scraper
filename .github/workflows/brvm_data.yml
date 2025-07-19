@@ -31,4 +31,4 @@ jobs:
         DB_PORT: ${{ secrets.DB_PORT }}
         DB_NAME: ${{ secrets.DB_NAME }}
       run: |
-        python your_scraper_script.py
+        python actions.py
