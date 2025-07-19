@@ -61,4 +61,25 @@ DB_PASSWORD=your_password
 DB_HOST=your_host
 DB_PORT=5432
 DB_NAME=brvmdatabase
+## 🔄 GitHub Actions Automation
+
+The scraper is fully automated and runs **Monday–Friday at 08:00 UTC** using GitHub Actions.
+
+### ✅ Status: **Enabled and Working**
+
+The GitHub Actions workflow has been configured and is already running as scheduled.
+
+---
+
+### 📌 Trigger the Workflow Manually (Already Set Up)
+
+To run the scraper manually:
+
+1. Go to your GitHub repository: [brvm-stockdata-scraper](https://github.com/idrissbado/brvm-stockdata-scraper)
+2. Click on the **Actions** tab.
+3. Select the workflow: **BRVM Stock Data Scraper**
+4. Click **Run workflow** (top right)
+5. Confirm to run the workflow on `main`
+
+This will start the data extraction and push to the database.
 
