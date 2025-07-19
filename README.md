@@ -64,7 +64,7 @@ DB_NAME=brvmdatabase
 ## 🔄 GitHub Actions Automation
 
 The scraper is fully automated and runs **Monday–Friday at 08:00 UTC** using GitHub Actions.
-
+````
 ### ✅ Status: **Enabled and Working**
 
 The GitHub Actions workflow has been configured and is already running as scheduled.
