@@ -1,2 +1,29 @@
-# brvm-stockdata-scraper
-## get data from brvm 
+# 📊 BRVM Stock Data Scraper
+
+This project is a fully automated **web scraper** for extracting stock market data from the [BRVM (Bourse Régionale des Valeurs Mobilières)](https://www.brvm.org/) website. It runs daily (Monday to Friday) via GitHub Actions, cleans and transforms the data, and stores it in a PostgreSQL database.
+
+---
+
+## 🚀 Features
+
+- Scrapes **stock action data** (symbol, price, volume, etc.)
+- Auto-converts and cleans data (e.g., % changes, price formatting)
+- Pushes to a **remote PostgreSQL** database
+- Uses **GitHub Actions** to run every weekday at 08:00 UTC
+- Credentials managed securely via **GitHub Secrets**
+
+---
+
+## 🐍 Tech Stack
+
+- Python 3.10+
+- Selenium (headless browser automation)
+- Pandas (data processing)
+- SQLAlchemy (PostgreSQL connection)
+- GitHub Actions (CI automation)
+- dotenv (local environment variable support)
+
+---
+
+## 📁 Project Structure
+
