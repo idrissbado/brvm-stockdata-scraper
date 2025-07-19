@@ -38,3 +38,27 @@ brvm-stockdata-scraper/
 ├── requirements.txt              # Python dependencies
 └── README.md                     # Project documentation (this file)
 ```
+
+---
+
+## ⚙️ Environment Variables
+
+These environment variables must be added as **GitHub Secrets** in your repository:
+
+| Secret Name    | Description                    |
+|----------------|--------------------------------|
+| `DB_USER`       | PostgreSQL username            |
+| `DB_PASSWORD`   | PostgreSQL password            |
+| `DB_HOST`       | PostgreSQL host (e.g. RDS URL) |
+| `DB_PORT`       | PostgreSQL port (usually 5432) |
+| `DB_NAME`       | PostgreSQL database name       |
+
+Create a `.env` file locally for testing based on this template:
+
+```env
+DB_USER=your_username
+DB_PASSWORD=your_password
+DB_HOST=your_host
+DB_PORT=5432
+DB_NAME=brvmdatabase
+
