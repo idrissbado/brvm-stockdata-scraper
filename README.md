@@ -27,3 +27,14 @@ This project is a fully automated **web scraper** for extracting stock market da
 
 ## 📁 Project Structure
 
+```bash
+brvm-stockdata-scraper/
+├── brvm-scraper/                 # Main source folder
+│   └── scraper.py                # Web scraping and DB insertion script
+├── .github/
+│   └── workflows/
+│       └── scraper.yml           # GitHub Actions CI workflow
+├── .env.example                  # Environment variable template
+├── requirements.txt              # Python dependencies
+└── README.md                     # Project documentation (this file)
+```
