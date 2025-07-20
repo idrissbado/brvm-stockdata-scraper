@@ -61,8 +61,6 @@ df["CHANGE_PERCENT"] = df["CHANGE_PERCENT"].str.replace('%', '').str.replace(','
 
 # Add update date
 df["UPDATE_DATE"] = pd.Timestamp.today().normalize()
-
-target_postgres_engine = create_engine(f"postgresql://{target_db_params_postgres['user']}:{target_db_params_postgres['password']}@{target_db_params_postgres['host']}:{target_db_params_postgres['port']}/{target_db_params_postgres['database']}")
 # Create the new column by combining SYMBOL and UPDATE_DATE without spaces
 df['ID'] = df['SYMBOL'] + '-' + df['UPDATE_DATE'].str.replace(' ', '')
 df=pd.DataFrame(df)
@@ -83,6 +81,8 @@ target_db_params_postgres = {
     'password': os.getenv('DB_PASSWORD'),
     'database': os.getenv('DB_NAME')
 }
+target_postgres_engine = create_engine(f"postgresql://{target_db_params_postgres['user']}:{target_db_params_postgres['password']}@{target_db_params_postgres['host']}:{target_db_params_postgres['port']}/{target_db_params_postgres['database']}")
+
 # Now insert with correct SQLAlchemy syntax
 with target_postgres_engine.begin() as connection:
     for _, row in df.iterrows():
