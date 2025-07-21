@@ -62,7 +62,7 @@ df["CHANGE_PERCENT"] = df["CHANGE_PERCENT"].str.replace('%', '').str.replace(','
 # Add update date
 df["UPDATE_DATE"] = pd.Timestamp.today().normalize()
 # Create the new column by combining SYMBOL and UPDATE_DATE without spaces
-df['ID'] = df['SYMBOL'] + '-' + df['UPDATE_DATE'].str.replace(' ', '')
+df['ID'] = df['SYMBOL'] + '-' + df['UPDATE_DATE'].astype(str).str.replace(' ', '')
 df=pd.DataFrame(df)
 
 # First rename DataFrame columns to match database schema
