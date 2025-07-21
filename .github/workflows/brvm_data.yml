@@ -1,40 +1,44 @@
-name: BRVM Stock Data Scraper
+name: BRVM Scraper
 
 on:
-  push:                             # Trigger on push
   schedule:
-    - cron: '0 15 * * 1-5'          # 10:00 UTC Monday to Friday
-  workflow_dispatch:               # Manual trigger from GitHub
+    - cron: '0 15 * * 1-5'  # À 10h du lundi au vendredi
+  workflow_dispatch:
 
 jobs:
-  scrape_and_store:
+  run-scraper:
     runs-on: ubuntu-latest
 
+    env:
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      - name: Install Docker (manually)
+        run: |
+          curl -fsSL https://get.docker.com -o get-docker.sh
+          sh get-docker.sh
+          sudo usermod -aG docker $USER
+          docker --version
 
-    - name: Debug file presence
-      run: |
-        pwd
-        ls -R
-
-    - name: Run scraper
-      env:
-        DB_USER: ${{ secrets.DB_USER }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        DB_HOST: ${{ secrets.DB_HOST }}
-        DB_PORT: ${{ secrets.DB_PORT }}
-        DB_NAME: ${{ secrets.DB_NAME }}
-      run: |
-        python actions.py
+      - name: Build and run scraper container
+        run: |
+          docker build -t brvm_scraper .
+          docker run --rm \
+            -e DB_USER=$DB_USER \
+            -e DB_PASSWORD=$DB_PASSWORD \
+            -e DB_HOST=$DB_HOST \
+            -e DB_PORT=$DB_PORT \
+            -e DB_NAME=$DB_NAME \
+            brvm_scraper
