@@ -5,12 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import time
-from sqlalchemy import create_engine
-from datetime import datetime, timedelta
-from sqlalchemy import text
-import numpy as np
-from sqlalchemy import bindparam
-from dotenv import load_dotenv
+from sqlalchemy import create_engine, text
 import os
 
 # Configure headless Chrome
@@ -61,11 +56,11 @@ df["CHANGE_PERCENT"] = df["CHANGE_PERCENT"].str.replace('%', '').str.replace(','
 
 # Add update date
 df["UPDATE_DATE"] = pd.Timestamp.today().normalize()
+
 # Create the new column by combining SYMBOL and UPDATE_DATE without spaces
 df['ID'] = df['SYMBOL'] + '-' + df['UPDATE_DATE'].astype(str).str.replace(' ', '')
-df=pd.DataFrame(df)
 
-# First rename DataFrame columns to match database schema
+# Rename columns to match DB schema
 df = df.rename(columns={
     'PREVIOUS_PRICE': 'PREVIOUS_PR',
     'OPENING_PRICE': 'OPENING_PR',
@@ -73,25 +68,29 @@ df = df.rename(columns={
     'CHANGE_PERCENT': 'CHANGE_PEF'
 })
 
-load_dotenv()
-target_db_params_postgres = {
-    'host': os.getenv('DB_HOST'),
-    'port': os.getenv('DB_PORT'),
-    'user': os.getenv('DB_USER'),
-    'password': os.getenv('DB_PASSWORD'),
-    'database': os.getenv('DB_NAME')
-}
-target_postgres_engine = create_engine(f"postgresql://{target_db_params_postgres['user']}:{target_db_params_postgres['password']}@{target_db_params_postgres['host']}:{target_db_params_postgres['port']}/{target_db_params_postgres['database']}")
+# --- NO load_dotenv() HERE ---
 
-# Now insert with correct SQLAlchemy syntax
+# Read DB credentials from environment and strip spaces/newlines
+host = os.getenv('DB_HOST', '').strip()
+port = os.getenv('DB_PORT', '').strip()
+user = os.getenv('DB_USER', '').strip()
+password = os.getenv('DB_PASSWORD', '').strip()
+database = os.getenv('DB_NAME', '').strip()
+
+print(f"Connecting to DB at {host}:{port} with user {user}")
+
+# Create SQLAlchemy engine
+connection_string = f"postgresql://{user}:{password}@{host}:{port}/{database}"
+target_postgres_engine = create_engine(connection_string)
+
+# Insert data into DB with ON CONFLICT UPDATE
 with target_postgres_engine.begin() as connection:
     for _, row in df.iterrows():
-        # Create a SQLAlchemy text() object
         stmt = text("""
             INSERT INTO actions (ID, SYMBOL, NAME, VOLUME, PREVIOUS_PR, OPENING_PR, 
-                               CLOSING_PRI, CHANGE_PEF, UPDATE_DATE)
+                                 CLOSING_PRI, CHANGE_PEF, UPDATE_DATE)
             VALUES (:ID, :SYMBOL, :NAME, :VOLUME, :PREVIOUS_PR, 
-                   :OPENING_PR, :CLOSING_PRI, :CHANGE_PEF, :UPDATE_DATE)
+                    :OPENING_PR, :CLOSING_PRI, :CHANGE_PEF, :UPDATE_DATE)
             ON CONFLICT (ID) DO UPDATE SET
                 SYMBOL = EXCLUDED.SYMBOL,
                 NAME = EXCLUDED.NAME,
@@ -102,8 +101,6 @@ with target_postgres_engine.begin() as connection:
                 CHANGE_PEF = EXCLUDED.CHANGE_PEF,
                 UPDATE_DATE = EXCLUDED.UPDATE_DATE
         """)
-        
-        # Execute with parameters
         connection.execute(stmt, {
             'ID': row['ID'],
             'SYMBOL': row['SYMBOL'],
