@@ -22,7 +22,7 @@ brvm-stockdata-scraper/
 
 ## 🔄 GitHub Actions Automation
 
-The scraper is fully automated and runs **Monday–Friday at 08:00 UTC** using GitHub Actions.
+The scraper is fully automated and runs **Monday–Friday at 10:00 UTC** using GitHub Actions.
 
 ### ✅ Status: **Enabled and Working**
 
