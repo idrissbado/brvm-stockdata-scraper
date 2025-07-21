@@ -115,7 +115,7 @@ name: BRVM Stock Data Scraper
 
 on:
   schedule:
-    - cron: '0 8 * * 1-5'  # 08:00 UTC Monday to Friday
+    - cron: '0 10 * * 1-5'  # 08:00 UTC Monday to Friday
   workflow_dispatch:
 
 jobs:
