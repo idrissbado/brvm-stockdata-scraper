@@ -1,9 +1,10 @@
 name: BRVM Stock Data Scraper
 
 on:
+  push:                             # Trigger on push
   schedule:
-  - cron: '0 10 * * 1-5'  # Run at 10:00 UTC Monday to Friday
-  workflow_dispatch:      # Also allows manual trigger
+    - cron: '0 15 * * 1-5'          # 10:00 UTC Monday to Friday
+  workflow_dispatch:               # Manual trigger from GitHub
 
 jobs:
   scrape_and_store:
@@ -23,6 +24,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: Debug file presence
+      run: |
+        pwd
+        ls -R
+
     - name: Run scraper
       env:
         DB_USER: ${{ secrets.DB_USER }}
@@ -31,4 +37,4 @@ jobs:
         DB_PORT: ${{ secrets.DB_PORT }}
         DB_NAME: ${{ secrets.DB_NAME }}
       run: |
-           python actions.py
+        python actions.py
