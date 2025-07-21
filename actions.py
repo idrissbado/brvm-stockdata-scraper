@@ -59,7 +59,6 @@ df["UPDATE_DATE"] = pd.Timestamp.today().normalize()
 
 # Create the new column by combining SYMBOL and UPDATE_DATE without spaces
 df['ID'] = df['SYMBOL'] + '-' + df['UPDATE_DATE'].astype(str).str.replace(' ', '')
-
 # Rename columns to match DB schema
 df = df.rename(columns={
     'PREVIOUS_PRICE': 'PREVIOUS_PR',
